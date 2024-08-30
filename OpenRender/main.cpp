@@ -1,6 +1,7 @@
 #include <cstdio>
 #include "Screen.h"
 #include "Input.h"
+#include "Shader.h"
 
 
 int main(int argc, char* argv[])
@@ -9,6 +10,8 @@ int main(int argc, char* argv[])
 	{
 		return -1;
 	}
+
+	Shader shader("shaders/main.vert", "shaders/main.frag");
 	//=========================================================================
 	// MAIN LOOP
 	//=========================================================================
