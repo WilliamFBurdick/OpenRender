@@ -30,6 +30,8 @@ public:
 	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
 	void ProcessMouseScroll(float yoffset);
 
+	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+
 	void Update(float deltaTime);
 
 public:

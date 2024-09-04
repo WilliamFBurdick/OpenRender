@@ -92,6 +92,11 @@ void Camera::ProcessMouseScroll(float yoffset)
         Zoom = 45.0f;
 }
 
+void Camera::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    glViewport(x, y, width, height);
+}
+
 void Camera::Update(float deltaTime)
 {
     //ProcessMouseMovement(Input::Instance()->GetMouseMotionX(), Input::Instance()->GetMouseMotionY());

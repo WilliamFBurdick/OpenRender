@@ -15,9 +15,47 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_sdl2.h"
 
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
+const int CONSOLE_WINDOW_HEIGHT = 250;
+const int PROPERTIES_WINDOW_WIDTH = 400;
+
 float deltaTime, lastFrame;
 
-void ProcessInput(float deltaTime);
+SDL_Rect mouseCollider = { 0 };
+SDL_Rect sceneCollider = { 0, 0, SCREEN_WIDTH - PROPERTIES_WINDOW_WIDTH, SCREEN_HEIGHT - CONSOLE_WINDOW_HEIGHT };
+
+void RenderConsoleWindow()
+{
+	ImGui::Begin("Output console", nullptr, 
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | 
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | 
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
+
+	ImVec2 windowPos = ImVec2(0, SCREEN_HEIGHT - CONSOLE_WINDOW_HEIGHT - 25);
+	ImVec2 windowSize = ImVec2(SCREEN_WIDTH - PROPERTIES_WINDOW_WIDTH, CONSOLE_WINDOW_HEIGHT);
+
+	ImGui::SetWindowPos("Output console", windowPos);
+	ImGui::SetWindowSize("Output console", windowSize);
+
+	ImGui::End();
+}
+
+void RenderPropertiesWindow()
+{
+	ImGui::Begin("Properties", nullptr,
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
+
+	ImVec2 windowPos = ImVec2(SCREEN_WIDTH - PROPERTIES_WINDOW_WIDTH, 0);
+	ImVec2 windowSize = ImVec2(PROPERTIES_WINDOW_WIDTH, SCREEN_HEIGHT);
+
+	ImGui::SetWindowPos("Properties", windowPos);
+	ImGui::SetWindowSize("Properties", windowSize);
+
+	ImGui::End();
+}
 
 int main(int argc, char* argv[])
 {
@@ -52,6 +90,7 @@ int main(int argc, char* argv[])
 
 	Light light(unlitShader);
 	Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+	camera.SetViewport(0, CONSOLE_WINDOW_HEIGHT, SCREEN_WIDTH - PROPERTIES_WINDOW_WIDTH, SCREEN_HEIGHT - CONSOLE_WINDOW_HEIGHT);
 
 	//=========================================================================
 	// MAIN LOOP
@@ -62,17 +101,20 @@ int main(int argc, char* argv[])
 		float currentFrame = SDL_GetTicks() / 1000.f;
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		Input::Instance()->Update();
+
+		mouseCollider = { Input::Instance()->GetMousePositionX(), Input::Instance()->GetMousePositionY(), 1, 1 };
+		bool bMouseColliding = SDL_HasIntersection(&mouseCollider, &sceneCollider);
 
 		glm::mat4 projection = glm::perspective(camera.Zoom, (float)Screen::Instance()->GetWidth() / (float)Screen::Instance()->GetHeight(), 0.1f, 100.f);
 
-		Input::Instance()->Update();
 		if (Input::Instance()->IsXClicked() || Input::Instance()->GetKeyboard()[SDL_SCANCODE_ESCAPE])
 		{
 			isRunning = false;
 		}
 		Screen::Instance()->Clear();
 
-		if (Input::Instance()->IsLeftButtonClicked())
+		if (bMouseColliding && Input::Instance()->IsLeftButtonClicked())
 		{
 			glm::vec3 rotation = grid.GetTransform().GetRotation();
 			rotation.x += Input::Instance()->GetMouseMotionY() * deltaTime;
@@ -109,7 +151,8 @@ int main(int argc, char* argv[])
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::ShowDemoWindow();
+		RenderConsoleWindow();
+		RenderPropertiesWindow();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

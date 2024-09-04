@@ -24,6 +24,7 @@ void Input::Update()
     {
         switch(event.type)
         {
+            ImGui_ImplSDL2_ProcessEvent(&event);
             case SDL_QUIT:
                 m_isXClicked = true;
                 break;
