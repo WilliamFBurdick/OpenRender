@@ -1,6 +1,9 @@
 #include "Screen.h"
 #include <glad/glad.h>
 #include <cstdio>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_sdl2.h"
 
 Screen* Screen::Instance()
 {
@@ -14,7 +17,7 @@ Screen::Screen()
 	mContext = nullptr;
 }
 
-bool Screen::Init()
+bool Screen::Init(int width, int height)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
@@ -36,9 +39,11 @@ bool Screen::Init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
+	mWidth = width;
+	mHeight = height;
 	mWindow = SDL_CreateWindow("OpenRender",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		1280, 720,
+		mWidth, mHeight,
 		SDL_WINDOW_OPENGL);
 	if (!mWindow)
 	{
@@ -52,6 +57,7 @@ bool Screen::Init()
 		printf("ERROR: Failed to create OpenGL Context: %s\n", SDL_GetError());
 		return false;
 	}
+	SDL_GL_MakeCurrent(mWindow, mContext);
 
 	// Initilaize glad
 	if (!gladLoadGL())
@@ -60,12 +66,20 @@ bool Screen::Init()
 		return false;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	ImGui::CreateContext();
+	ImGui_ImplOpenGL3_Init("#version 460");
+	ImGui_ImplSDL2_InitForOpenGL(mWindow, mContext);
+
     return true;
 }
 
 void Screen::Clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Screen::Present()

@@ -17,5 +17,6 @@ public:
 	void SetVec3(const std::string& name, float v1, float v2, float v3) const;
 	void SetVec3(const std::string& name, glm::vec3 value) const;
 	void SetMat4(const std::string& name, glm::mat4 matrix) const;
+	void SetMat3(const std::string& name, glm::mat3 matrix) const;
 };
 

@@ -52,15 +52,15 @@ void Input::Update()
             case SDL_MOUSEBUTTONUP:
                 switch (event.button.button)
                 {
-                case SDL_BUTTON_LEFT:
-                    m_isLeftButtonClicked = false;
-                    break;
-                case SDL_BUTTON_RIGHT:
-                    m_isRightButtonClicked = false;
-                    break;
-                case SDL_BUTTON_MIDDLE:
-                    m_isMiddleButtonClicked = false;
-                    break;
+                    case SDL_BUTTON_LEFT:
+                        m_isLeftButtonClicked = false;
+                        break;
+                    case SDL_BUTTON_RIGHT:
+                        m_isRightButtonClicked = false;
+                        break;
+                    case SDL_BUTTON_MIDDLE:
+                        m_isMiddleButtonClicked = false;
+                        break;
                 }
                 break;
             case SDL_MOUSEMOTION:
@@ -72,4 +72,5 @@ void Input::Update()
                 break;
         }
     }
+    mKeyboard = SDL_GetKeyboardState(NULL);
 }

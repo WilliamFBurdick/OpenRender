@@ -5,21 +5,23 @@ class Input
 public:
 	static Input* Instance();
 public:
-	inline bool IsXClicked() { return m_isXClicked; }
-	inline bool IsKeyPressed() { return m_isKeyPressed; }
+	inline bool IsXClicked() const { return m_isXClicked; }
+	inline bool IsKeyPressed() const { return m_isKeyPressed; }
 
-	inline char GetKeyUp() { return m_keyUp; }
-	inline char GetKeyDown() { return m_keyDown; }
+	inline char GetKeyUp() const { return m_keyUp; }
+	inline char GetKeyDown() const { return m_keyDown; }
 
-	inline bool IsLeftButtonClicked() { return m_isLeftButtonClicked; }
-	inline bool IsRightButtonClicked() { return m_isRightButtonClicked; }
-	inline bool IsMiddleMouseButtonClicked() { return m_isMiddleButtonClicked; }
+	inline bool IsLeftButtonClicked() const { return m_isLeftButtonClicked; }
+	inline bool IsRightButtonClicked() const { return m_isRightButtonClicked; }
+	inline bool IsMiddleMouseButtonClicked() const { return m_isMiddleButtonClicked; }
 
 	inline int GetMousePositionX() { return m_mousePositionX; }
 	inline int GetMousePositionY() { return m_mousePositionY; }
 
 	inline int GetMouseMotionX() { return m_mouseMotionX; }
 	inline int GetMouseMotionY() { return m_mouseMotionY; }
+
+	inline const Uint8* GetKeyboard() { return mKeyboard; }
 public:
 	void Update();
 private:
@@ -42,5 +44,7 @@ private:
 
 	int m_mousePositionX;
 	int m_mousePositionY;
+
+	const Uint8* mKeyboard;
 };
 
