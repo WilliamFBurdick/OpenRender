@@ -25,6 +25,8 @@ float deltaTime, lastFrame;
 SDL_Rect mouseCollider = { 0 };
 SDL_Rect sceneCollider = { 0, 0, SCREEN_WIDTH - PROPERTIES_WINDOW_WIDTH, SCREEN_HEIGHT - CONSOLE_WINDOW_HEIGHT };
 
+std::vector<Object*> objects;
+
 void RenderConsoleWindow()
 {
 	ImGui::Begin("Output console", nullptr, 
@@ -54,6 +56,19 @@ void RenderPropertiesWindow()
 	ImGui::SetWindowPos("Properties", windowPos);
 	ImGui::SetWindowSize("Properties", windowSize);
 
+	// Draw options
+	auto position = objects[0]->GetTransform().GetPosition();
+	ImGui::SliderFloat3("Position", &position.x, -20.0f, 20.0f, "%.2f");
+	objects[0]->GetTransform().SetPosition(position);
+
+	auto rotation = objects[0]->GetTransform().GetRotation();
+	ImGui::SliderFloat3("Rotation", &rotation.x, -360.0f, 360.0f, "%.2f");
+	objects[0]->GetTransform().SetRotation(rotation);
+
+	auto scale = objects[0]->GetTransform().GetScale();
+	ImGui::SliderFloat3("Scale", &scale.x, 0.001f, 10.0f, "%.2f");
+	objects[0]->GetTransform().SetScale(scale);
+
 	ImGui::End();
 }
 
@@ -72,9 +87,11 @@ int main(int argc, char* argv[])
 	Shader unlitShader("shaders/unlit.vert", "shaders/unlit.frag");
 
 	Grid grid;
-	std::vector<Object*> objects;
 
 	Quad quad;
+	quad.GetTransform().SetPosition(glm::vec3(-5.0f, -2.0f, 4.0f));
+	quad.GetTransform().SetRotation(glm::vec3(-5.0f, -2.0f, 4.0f));
+	quad.GetTransform().SetScale(glm::vec3(0.5f));
 	objects.push_back(&quad);
 
 	Cube cube("resources/textures/Crate_1.png");
@@ -86,7 +103,6 @@ int main(int argc, char* argv[])
 	Model model;
 	model.Load("resources/objects/Armchair.obj");
 	objects.push_back(&model);
-
 
 	Light light(unlitShader);
 	Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));

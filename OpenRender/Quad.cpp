@@ -2,7 +2,8 @@
 #include "Shader.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Quad::Quad()
+Quad::Quad():
+	Object()
 {
 	GLfloat vertices[] = { -0.5f,  0.5f, 0.0f,
 							0.5f,  0.5f, 0.0f,

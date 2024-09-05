@@ -4,6 +4,7 @@
 Object::Object(Transform* parent)
 {
 	mParent = parent;
+	mTransform = Transform();
 }
 
 void Object::Render(const Shader& shader)

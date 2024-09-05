@@ -22,9 +22,9 @@ void Input::Update()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
         switch(event.type)
         {
-            ImGui_ImplSDL2_ProcessEvent(&event);
             case SDL_QUIT:
                 m_isXClicked = true;
                 break;
